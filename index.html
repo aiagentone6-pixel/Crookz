@@ -377,6 +377,10 @@
   </div>
 
   <script>
+    // Google Sheets Integration Config
+    // Paste your Google Apps Script Web App URL below:
+    const GOOGLE_SHEET_SCRIPT_URL = "";
+
     // State Variables
     let steps = {
       1: false,
@@ -493,6 +497,21 @@
       
       // Save locally (Mock DB persistence)
       localStorage.setItem('inkcrookz_early_access_wallet', address);
+
+      // Send to Google Sheets if URL is configured
+      if (GOOGLE_SHEET_SCRIPT_URL) {
+        const formData = new FormData();
+        formData.append('address', address);
+        formData.append('timestamp', new Date().toLocaleString());
+
+        fetch(GOOGLE_SHEET_SCRIPT_URL, {
+          method: 'POST',
+          body: formData,
+          mode: 'no-cors'
+        })
+        .then(() => console.log('Successfully sent data to Google Sheets'))
+        .catch(err => console.error('Error sending to Google Sheets:', err));
+      }
       
       // Update success text
       document.getElementById('submittedAddressText').innerText = address;
